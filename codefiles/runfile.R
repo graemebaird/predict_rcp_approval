@@ -2,16 +2,14 @@
 # Predictit Sample --------------------------------------------------------
 
 #Set current market
-curr.market <- "OBAMAAPPR.090216"
+#curr.market <- "OBAMAAPPR.090216"
+curr.market <- "538.071618"
 
 # Quick look at prices
 ql.PRD(curr.market)
 
 # Quick look at poll tables
-ql.RCP()
-
-# Quick look at current average
-ql.rcpAvg()
+ql.RCP("president_trump_job_approval-6179")
 
 #Latest numbers for all RCP polls
 rcp.frame <- updateRCP()

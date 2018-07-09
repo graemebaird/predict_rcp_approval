@@ -7,15 +7,19 @@ updateRCP <- function(){
   
   RCPscraper <- function(pid){
     
-    current_date = "2016-05-18"
+    current_date = Sys.Date()
     unix_time = as.numeric(as.POSIXct(current_date))
-    file_loc = "D:/Dropbox/Docstore/Prediction markets/poll"
-    #file_loc = "/Users/salix/Dropbox/Docstore/Prediction markets/temp"
+    file_loc = "./"
+    file = paste0(file_loc,pid,'_historical.js')
+    file_time <- file.info(file)$mtime
     
+    #Only update file if not present or more than a day old
+    if(is.na(file_time) | Sys.time() - file_time > 9e4) {
     url = paste('http://www.realclearpolitics.com/epolls/json/',pid,'_historical.js', sep='')
-    download.file(url=url,destfile = file_loc)
+    download.file(url=url,destfile = file)
+    }
     
-    text_string = readChar(file_loc, file.info(file_loc)$size)
+    text_string = readChar(file, file.info(file)$size)
     text_string = substring(text_string,13)
     text_string = substr(text_string, 1, nchar(text_string)-2)
     polls = fromJSON(text_string)
@@ -37,46 +41,48 @@ updateRCP <- function(){
     app_vals = rev(app_vals)
     dis_vals = rev(dis_vals)
     
-    output <- data.frame(date,app_vals,dis_vals)
+    output <- data.frame(as.Date(date, format = "%d %b %Y"),app_vals,dis_vals,stringsAsFactors = FALSE)
     return(output)
   }
+  # 
+  # obama <- RCPscraper(1044)
+  # colnames(obama) <- c("Date", "app1044", "dis1044")
+  trump <- RCPscraper(6179)
+  colnames(trump) <- c("Date", "app6179", "dis6179")
+  # congress <- RCPscraper(903)
+  # colnames(congress) <- c("Date", "app903", "dis903")
+  # dirc <- RCPscraper(902)
+  # colnames(dirc) <- c("Date", "app902", "dis902")
   
-  obama <- RCPscraper(1044)
-  colnames(obama) <- c("Date", "app1044", "dis1044")
-  congress <- RCPscraper(903)
-  colnames(congress) <- c("Date", "app903", "dis903")
-  dirc <- RCPscraper(902)
-  colnames(dirc) <- c("Date", "app902", "dis902")
-  
-  rcp.frame <- obama
-  
-  rcp.frame$Date903 <- rep(NA,length(rcp.frame$Date))
-  rcp.frame$app903 <- rep(NA,length(rcp.frame$Date))
-  rcp.frame$dis903 <- rep(NA,length(rcp.frame$Date))
-  rcp.frame$Date902 <- rep(NA,length(rcp.frame$Date))
-  rcp.frame$app902 <- rep(NA,length(rcp.frame$Date))
-  rcp.frame$dis902 <- rep(NA,length(rcp.frame$Date))
-  
-  rcp.frame$Date903[rcp.frame$Date %in% congress$Date] <- as.character(congress$Date[congress$Date %in% rcp.frame$Date])
-  rcp.frame$app903[rcp.frame$Date %in% congress$Date] <- congress$app903[congress$Date %in% rcp.frame$Date]
-  rcp.frame$dis903[rcp.frame$Date %in% congress$Date] <- congress$dis903[congress$Date %in% rcp.frame$Date]
-  
-  rcp.frame$Date902[rcp.frame$Date %in% dirc$Date] <- as.character(dirc$Date[dirc$Date %in% rcp.frame$Date])
-  rcp.frame$app902[rcp.frame$Date %in% dirc$Date] <- dirc$app902[dirc$Date %in% rcp.frame$Date]
-  rcp.frame$dis902[rcp.frame$Date %in% dirc$Date] <- dirc$dis902[dirc$Date %in% rcp.frame$Date]
-  
-  
-  rcp.frame$app903[is.na(rcp.frame$app903)] <- rcp.frame$app903[max(which(rcp.frame$app903 != "NA"))]
-  rcp.frame$dis903[is.na(rcp.frame$dis903)] <- rcp.frame$dis903[max(which(rcp.frame$dis903 != "NA"))]
-  
-  rcp.frame$app902[is.na(rcp.frame$app902)] <- rcp.frame$app902[max(which(rcp.frame$app902 != "NA"))]
-  rcp.frame$dis902[is.na(rcp.frame$dis902)] <- rcp.frame$dis902[max(which(rcp.frame$dis902 != "NA"))]
-  
-  ### Sanity Check
-  which(is.na(rcp.frame), TRUE)
-  
-  tail(rcp.frame,7)
-  
+  rcp.frame <- trump
+  # 
+  # rcp.frame$Date903 <- rep(NA,length(rcp.frame$Date))
+  # rcp.frame$app903 <- rep(NA,length(rcp.frame$Date))
+  # rcp.frame$dis903 <- rep(NA,length(rcp.frame$Date))
+  # rcp.frame$Date902 <- rep(NA,length(rcp.frame$Date))
+  # rcp.frame$app902 <- rep(NA,length(rcp.frame$Date))
+  # rcp.frame$dis902 <- rep(NA,length(rcp.frame$Date))
+  # 
+  # rcp.frame$Date903[rcp.frame$Date %in% congress$Date] <- as.character(congress$Date[congress$Date %in% rcp.frame$Date])
+  # rcp.frame$app903[rcp.frame$Date %in% congress$Date] <- congress$app903[congress$Date %in% rcp.frame$Date]
+  # rcp.frame$dis903[rcp.frame$Date %in% congress$Date] <- congress$dis903[congress$Date %in% rcp.frame$Date]
+  # 
+  # rcp.frame$Date902[rcp.frame$Date %in% dirc$Date] <- as.character(dirc$Date[dirc$Date %in% rcp.frame$Date])
+  # rcp.frame$app902[rcp.frame$Date %in% dirc$Date] <- dirc$app902[dirc$Date %in% rcp.frame$Date]
+  # rcp.frame$dis902[rcp.frame$Date %in% dirc$Date] <- dirc$dis902[dirc$Date %in% rcp.frame$Date]
+  # 
+  # 
+  # rcp.frame$app903[is.na(rcp.frame$app903)] <- rcp.frame$app903[max(which(rcp.frame$app903 != "NA"))]
+  # rcp.frame$dis903[is.na(rcp.frame$dis903)] <- rcp.frame$dis903[max(which(rcp.frame$dis903 != "NA"))]
+  # 
+  # rcp.frame$app902[is.na(rcp.frame$app902)] <- rcp.frame$app902[max(which(rcp.frame$app902 != "NA"))]
+  # rcp.frame$dis902[is.na(rcp.frame$dis902)] <- rcp.frame$dis902[max(which(rcp.frame$dis902 != "NA"))]
+  # # 
+  # ### Sanity Check
+  # which(is.na(rcp.frame), TRUE)
+  # 
+  # tail(rcp.frame,7)
+  # 
   return(rcp.frame)
 }
 
@@ -182,11 +188,14 @@ update.PRD <- function(market) {
 ql.PRD <- function(market){
   raw<- GET(paste("https://www.predictit.org/api/marketdata/ticker/",market,sep=""), add_headers("Accept: application/xml"))
   
-  Prices <- data.frame(rep(0,4),rep(0,4),rep(0,4),rep(0,4),rep(0,4))
-  colnames(Prices) <- c("B1", "B2", "B3", "B4", "B5")
-  rownames(Prices) <- c("YesBuy","YesSell","NoBuy","NoSell")
+  Prices <- data.frame(Price = c("YesBuy","YesSell","NoBuy","NoSell"),
+                       B1= numeric(4),
+                       B2= numeric(4),
+                       B3= numeric(4),
+                       B4= numeric(4),
+                       B5= numeric(4))
   
-  for (i in 1:5){
+  for (i in 2:6){
     Prices[1,i] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestBuyYesCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestBuyYesCost)
     Prices[2,i] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestSellYesCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestSellYesCost)
     Prices[3,i] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestBuyNoCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestBuyNoCost)
@@ -207,65 +216,16 @@ ql.PRD <- function(market){
 ######################### Collect poll data from average tables ###########################
 ###########################################################################################
 
-ql.RCP <- function(){
-  
-  u = "http://www.realclearpolitics.com/epolls/other/president_obama_job_approval-1044.html"
-  pagetree <- htmlTreeParse(u, useInternalNodes = TRUE)
-  xxpath = "//*[@class=' isInRcpAvg' or @class='alt isInRcpAvg' ]"
-  testy <- xpathApply(pagetree, xxpath, readHTMLList)
-  
-  poll.block <- data.frame(t(rep(0,8)))
-  colnames(poll.block) <- c("Pollname", "Dates", "Sample", "App", "Dis", "Spread", "Sampletime", "ID")
-  for(i in 1:(length(testy)/2)){
-    for(j in 1:6){
-      poll.block[i,j] <- testy[[i]][j]
-    }
-    poll.block[i,7] <- as.POSIXct(Sys.time())
-    poll.block[i,8] <- paste(substr(poll.block[i,1],0,3),strsplit(poll.block[i,2],split=" ")[[1]][3],sep="")
-  }
-  poll.block$App <- as.numeric(poll.block$App)
-  poll.block$Dis <- as.numeric(poll.block$Dis)
-  poll.block$Spread <- as.numeric(poll.block$Spread)
-  poll.block
-  
-  mean(poll.block$App)
+ql.RCP <- function(pollid){
+  u = paste0("https://www.realclearpolitics.com/epolls/other/",pollid ,".html")
+  poll.block <- htmltab(doc = u)
+  poll.block %>% 
+    mutate(Approve = as.numeric(Approve), 
+           Disapprove = as.numeric(Disapprove), 
+           Spread = as.numeric(Spread))
   
   return(poll.block)
 }
-###########################################################################################
-###########################################################################################
-###########################################################################################
-
-
-###########################################################################################
-############################### Quick look at average 1044 ################################
-###########################################################################################
-
-ql.rcpAvg <- function(){
-  
-  u = "http://www.realclearpolitics.com/epolls/other/president_obama_job_approval-1044.html"
-  pagetree <- htmlTreeParse(u, useInternalNodes = TRUE)
-  xxpath = "//*[@class='rcpAvg' ]"
-  testy <- xpathApply(pagetree, xxpath, readHTMLList)
-  
-  poll.block <- data.frame(t(rep(0,8)))
-  colnames(poll.block) <- c("Pollname", "Dates", "Sample", "App", "Dis", "Spread", "Sampletime", "ID")
-  for(i in 1:(length(testy)/2)){
-    for(j in 1:6){
-      poll.block[i,j] <- testy[[i]][j]
-    }
-    poll.block[i,7] <- as.POSIXct(Sys.time())
-    poll.block[i,8] <- paste(substr(poll.block[i,1],0,3),strsplit(poll.block[i,2],split=" ")[[1]][3],sep="")
-  }
-  poll.block$App <- as.numeric(poll.block$App)
-  poll.block$Dis <- as.numeric(poll.block$Dis)
-  poll.block$Spread <- as.numeric(poll.block$Spread)
-  poll.block
-  
-  return(poll.block)
-  
-}
-
 ###########################################################################################
 ###########################################################################################
 ###########################################################################################
