@@ -2,7 +2,6 @@ library(shiny)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
-  
   # Application title
   titlePanel("Approval markets predictions"),
   
@@ -22,17 +21,17 @@ shinyUI(fluidPage(
   fluidRow(
     column(
       4,
-      tableOutput("PItable")
+      div(tableOutput("PItable"), style = "font-size:90%")
       
     ),
     column(8,
-      tableOutput("RCPtable")
+      div(tableOutput("RCPtable"), style = "font-size:80%")
     )
   ),
   fluidRow(
     column(
       12,
-      plotOutput("RCPhistorical")
+      plotlyOutput("RCPhistorical")
       
     )
   )

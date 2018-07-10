@@ -1,5 +1,3 @@
-library(shiny)
-
 
 shinyServer(function(input, output) {
   
@@ -18,12 +16,16 @@ shinyServer(function(input, output) {
   
   })
   
-  output$RCPhistorical <- renderPlot({
+  output$RCPhistorical <- renderPlotly({
     
-    updateRCP() %>%
+    p <- updateRCP() %>%
       ggplot() + 
-      geom_line(aes(Date,app6179))
+      geom_line(aes(Date,app6179)) + 
+      ylab("Approval") + 
+      ggtitle("Average rating")
+    ggplotly(p)
     
   })
+  
   
 })
