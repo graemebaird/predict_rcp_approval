@@ -1,8 +1,8 @@
 
 shinyServer(function(input, output) {
   
-  source("../codefiles/libraries.R")
-  source("../codefiles/functions.R")
+  source("libraries.R")
+  source("functions.R")
   
   output$PItable <- renderTable({
     
