@@ -1,6 +1,8 @@
 # Predictit markets and RealClearPolitics polling data
 
-This repository holds scripts that can scrape, collate, and analyze presidential approval data, and compare the values to predictit markets. A Shiny app interface provides a UI for interacting with the data.
+This repository holds scripts that can scrape, collate, and analyze presidential approval data, and compare the values to predictit markets. A Shiny app interface provides a UI for interacting with the data:
+
+https://graemebaird.shinyapps.io/predictit_panel/
 
 ## Underlying functions
 
