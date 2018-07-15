@@ -15,3 +15,7 @@ Some basic workhorse functions form the underlying code of this project. They ar
 ## Prediction, estimation, and loss function
 
 Documentation pending. 
+
+## Twitter sentiment analysis comparison 
+
+Partially based on `https://github.com/bpb27/twitter_scraping` and `http://dataaspirant.com/2018/03/22/twitter-sentiment-analysis-using-r/`, documentation pending.
