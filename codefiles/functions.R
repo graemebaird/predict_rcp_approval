@@ -106,13 +106,13 @@ newmarket.PRD <- function(market){
   
   Prices <- data.frame(t(rep(0,21)))
   
-  Prices[1,1] <- content(raw)$TimeStamp
+  Prices[1,1] <- httr::content(raw)$TimeStamp
   
   for (i in 1:5){
-    Prices[1,i+1] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestBuyYesCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestBuyYesCost)
-    Prices[1,i+6] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestSellYesCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestSellYesCost)
-    Prices[1,i+11] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestBuyNoCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestBuyNoCost)
-    Prices[1,i+16] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestSellNoCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestSellNoCost)
+    Prices[1,i+1] <- ifelse(is.null(httr::content(raw)$Contracts[[i]]$BestBuyYesCost) == TRUE, NA, httr::content(raw)$Contracts[[i]]$BestBuyYesCost)
+    Prices[1,i+6] <- ifelse(is.null(httr::content(raw)$Contracts[[i]]$BestSellYesCost) == TRUE, NA, httr::content(raw)$Contracts[[i]]$BestSellYesCost)
+    Prices[1,i+11] <- ifelse(is.null(httr::content(raw)$Contracts[[i]]$BestBuyNoCost) == TRUE, NA, httr::content(raw)$Contracts[[i]]$BestBuyNoCost)
+    Prices[1,i+16] <- ifelse(is.null(httr::content(raw)$Contracts[[i]]$BestSellNoCost) == TRUE, NA, httr::content(raw)$Contracts[[i]]$BestSellNoCost)
   }
   
   predictRecord <- Prices[1,]
@@ -153,13 +153,13 @@ update.PRD <- function(market) {
   
   Prices <- data.frame(t(rep(0,21)))
   
-  Prices[1,1] <- content(raw)$TimeStamp
+  Prices[1,1] <- httr::content(raw)$TimeStamp
   
   for (i in 1:5){
-    Prices[1,i+1] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestBuyYesCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestBuyYesCost)
-    Prices[1,i+6] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestSellYesCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestSellYesCost)
-    Prices[1,i+11] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestBuyNoCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestBuyNoCost)
-    Prices[1,i+16] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestSellNoCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestSellNoCost)
+    Prices[1,i+1] <- ifelse(is.null(httr::content(raw)$Contracts[[i]]$BestBuyYesCost) == TRUE, NA, httr::content(raw)$Contracts[[i]]$BestBuyYesCost)
+    Prices[1,i+6] <- ifelse(is.null(httr::content(raw)$Contracts[[i]]$BestSellYesCost) == TRUE, NA, httr::content(raw)$Contracts[[i]]$BestSellYesCost)
+    Prices[1,i+11] <- ifelse(is.null(httr::content(raw)$Contracts[[i]]$BestBuyNoCost) == TRUE, NA, httr::content(raw)$Contracts[[i]]$BestBuyNoCost)
+    Prices[1,i+16] <- ifelse(is.null(httr::content(raw)$Contracts[[i]]$BestSellNoCost) == TRUE, NA, httr::content(raw)$Contracts[[i]]$BestSellNoCost)
   }
   
   colnames(Prices) <- c("Date", "YesBuy.B1", "YesBuy.B2", "YesBuy.B3", "YesBuy.B4", "YesBuy.B5", 
@@ -196,10 +196,10 @@ ql.PRD <- function(market){
                        B5= numeric(4))
   
   for (i in 2:6){
-    Prices[1,i] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestBuyYesCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestBuyYesCost)
-    Prices[2,i] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestSellYesCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestSellYesCost)
-    Prices[3,i] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestBuyNoCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestBuyNoCost)
-    Prices[4,i] <- ifelse(is.null(content(raw)$Contracts[[i]]$BestSellNoCost) == TRUE, NA, content(raw)$Contracts[[i]]$BestSellNoCost)
+    Prices[1,i] <- ifelse(is.null(httr::content(raw)$Contracts[[i]]$BestBuyYesCost) == TRUE, NA, httr::content(raw)$Contracts[[i]]$BestBuyYesCost)
+    Prices[2,i] <- ifelse(is.null(httr::content(raw)$Contracts[[i]]$BestSellYesCost) == TRUE, NA, httr::content(raw)$Contracts[[i]]$BestSellYesCost)
+    Prices[3,i] <- ifelse(is.null(httr::content(raw)$Contracts[[i]]$BestBuyNoCost) == TRUE, NA, httr::content(raw)$Contracts[[i]]$BestBuyNoCost)
+    Prices[4,i] <- ifelse(is.null(httr::content(raw)$Contracts[[i]]$BestSellNoCost) == TRUE, NA, httr::content(raw)$Contracts[[i]]$BestSellNoCost)
     
   }
   
@@ -350,7 +350,7 @@ build.brackets <- function(market){
   bracket.vec <- NULL
   
   for (i in 1:5){
-    bracket.vec[i] <- content(raw)$Contracts[[i]]$ShortName
+    bracket.vec[i] <- httr::content(raw)$Contracts[[i]]$ShortName
   }
   
   bracket.vec <- strsplit(bracket.vec, split = c("\\+","-","-","-","-"))
