@@ -8,7 +8,7 @@ updateRCP <- function(){
   RCPscraper <- function(pid){
     
     current_date = Sys.Date()
-    unix_time = as.numeric(as.POSIXct(current_date))
+    unix_time = as.numeric(as.POSIXct(current_date,tz="GMT"))
     file_loc = "./"
     file = paste0(file_loc,pid,'_historical.js')
     file_time <- file.info(file)$mtime
